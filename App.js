@@ -23,6 +23,11 @@ export default function App() {
   };
 
   const onPressDelete = (index) => {
+    //setGoalList(goalList.filter((item) => {
+    //      return item !== "Aller à la salle de sport 3 fois par semaine"
+    //   }
+    //  )
+    //)
   }
 
   return (
@@ -30,19 +35,19 @@ export default function App() {
         {
 
           goalList.map((goal, index) => (
-            <View style={styles.Array}>
-              <Text key={index} style={styles.text}>
-                {goal}
-                <Button
-                    color='#f194ff'
-                    title="X"
-                    onPress={onPressDelete(index)}
-                />
-              </Text>
-            </View>
+                <View style={styles.Array}>
+                  <Text key={index} style={styles.text}>
+                    {goal}
+                  </Text>
+                  <Button
+                      color='#f194ff'
+                      title="X"
+                      onPress={onPressDelete(index)}
+                  />
+                </View>
           ))
         }
-        <SafeAreaView style={styles.containerInput}>
+        <View style={styles.containerInput}>
           <TextInput
               style={styles.input}
               onChangeText={onChangeText}
@@ -54,7 +59,7 @@ export default function App() {
               title="Ajouter"
               onPress={onPressAdd}
           />
-        </SafeAreaView>
+        </View>
       </View>
   );
 }
@@ -74,7 +79,7 @@ const styles = StyleSheet.create({
 
   Array: {
     flexDirection: "row",
-    alignSelf: "center",
+    alignItems: "flex-start",
   },
 
   text: {
@@ -91,6 +96,6 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    color: '#f194ff',
+    alignSelf: "flex-end",
   }
 });
