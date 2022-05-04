@@ -23,14 +23,15 @@ export default function App() {
   };
 
   const onPressDelete = (index) => {
-    goalList.splice(index, 1)
   }
 
   return (
       <View style={styles.container}>
         {
+
           goalList.map((goal, index) => (
-              <Text style={styles.text} key={index}>
+            <View style={styles.Array}>
+              <Text key={index} style={styles.text}>
                 {goal}
                 <Button
                     color='#f194ff'
@@ -38,17 +39,16 @@ export default function App() {
                     onPress={onPressDelete(index)}
                 />
               </Text>
+            </View>
           ))
         }
-        <SafeAreaView>
+        <SafeAreaView style={styles.containerInput}>
           <TextInput
               style={styles.input}
               onChangeText={onChangeText}
               value={text}
               placeholder='Entrer ici'
           />
-        </SafeAreaView>
-        <SafeAreaView style={styles.containerInput}>
           <Button
               color='#f194ff'
               title="Ajouter"
@@ -62,21 +62,25 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     justifyContent: 'center',
   },
 
   containerInput: {
+    flexDirection: "row",
     alignItems: "center",
+    justifyContent: 'center',
+  },
+
+  Array: {
+    flexDirection: "row",
+    alignSelf: "center",
   },
 
   text: {
     color: 'rgba(241,148,255,0.34)',
     fontWeight: 'bold',
     fontSize: 20,
-    alignItems: "flex-start",
-    borderColor: '#f194ff',
-    borderWidth: 1
   },
   input: {
     borderColor: '#f194ff',
