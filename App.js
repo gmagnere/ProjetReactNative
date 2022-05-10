@@ -1,73 +1,88 @@
 //import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, SafeAreaView, Button, Alert  } from 'react-native';
+import {StyleSheet, Text, View, TextInput, Button, ImageBackground} from 'react-native';
 import React, {useState} from "react";
 
 export default function App() {
   const sampleGoals = [
-    "Faire les courses",
-    "Aller à la salle de sport 3 fois par semaine",
-    "Monter à plus de 5000m d altitude",
-    "Acheter mon premier appartement",
-    "Perdre 5 kgs",
-    "Gagner en productivité",
-    "Apprendre un nouveau langage",
-    "Faire une mission en freelance",
-    "Organiser un meetup autour de la tech",
-    "Faire un triathlon",
+    {key:1,value:"Faire les courses"},
+    {key:2,value:"Aller à la salle de sport 3 fois par semaine"},
+    {key:3,value:"Monter à plus de 5000m d altitude"},
+    {key:4,value:"Acheter mon premier appartement"},
+    {key:5,value:"Perdre 5 kgs"},
+    {key:6,value:"Gagner en productivité"},
+    {key:7,value:"Apprendre un nouveau langage"},
+    {key:8,value:"Faire une mission en freelance"},
+    {key:9,value:"Organiser un meetup autour de la tech"},
+    {key:10,value:"Faire un triathlon"},
   ] ;
+  const image = {uri: "https://i.stack.imgur.com/jGlzr.png"};
   const [text, onChangeText] = useState("");
   const [goalList, setGoalList] = useState(sampleGoals);
 
   const onPressAdd = () => {
-    setGoalList([...goalList, text])
+    setGoalList([...goalList, {key: goalList.length+1, value:text}])
   };
 
-  const onPressDelete = (index) => {
-    //setGoalList(goalList.filter((item) => {
-    //      return item !== "Aller à la salle de sport 3 fois par semaine"
-    //   }
-    //  )
-    //)
+  const onPressDelete = (key) => {
+    return setGoalList(goalList.filter(item => item.key !== key))
   }
 
-  return (
-      <View style={styles.container}>
-        {
+  const buttonAdd = () => {
+    return (
+        <Button
+            title="Ajouter"
+            onPress={onPressAdd}
+        />
+    )
+  }
 
-          goalList.map((goal, index) => (
-                <View style={styles.Array}>
-                  <Text key={index} style={styles.text}>
-                    {goal}
+  const arrayMap = () => {
+      return (
+          goalList.map(({key, value}) => (
+              <View style={styles.Array}>
+                  <Text key={key} style={styles.text}>
+                      {value}
                   </Text>
-                  <Button
-                      color='#f194ff'
-                      title="X"
-                      onPress={onPressDelete(index)}
-                  />
-                </View>
+                  {buttonDelete(key)}
+              </View>
           ))
-        }
-        <View style={styles.containerInput}>
-          <TextInput
-              style={styles.input}
-              onChangeText={onChangeText}
-              value={text}
-              placeholder='Entrer ici'
-          />
-          <Button
-              color='#f194ff'
-              title="Ajouter"
-              onPress={onPressAdd}
-          />
+      )
+  }
+
+  const buttonDelete = (key) => {
+    return(
+        <Button
+            title="X"
+            onPress={() => onPressDelete(key)}
+        />
+    )
+
+  }
+  const List = () => {
+    return (
+        <View  style={styles.container}>
+          <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+              {arrayMap()}
+            <View style={styles.containerInput}>
+              <TextInput
+                  style={styles.input}
+                  onChangeText={onChangeText}
+                  value={text}
+                  placeholder='Entrer ici'
+              />
+              {buttonAdd()}
+            </View>
+          </ImageBackground>
         </View>
-      </View>
-  );
+    );
+  }
+
+  return List()
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
     justifyContent: 'center',
   },
 
@@ -83,12 +98,18 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    color: 'rgba(241,148,255,0.34)',
+    color: 'rgb(21,105,136)',
     fontWeight: 'bold',
     fontSize: 20,
   },
+
+  image: {
+    flex: 1,
+    justifyContent: "center"
+  },
+
   input: {
-    borderColor: '#f194ff',
+    borderColor: '#156988',
     height: 40,
     margin: 12,
     borderWidth: 1,
@@ -97,5 +118,5 @@ const styles = StyleSheet.create({
 
   button: {
     alignSelf: "flex-end",
-  }
+  },
 });
