@@ -1,5 +1,5 @@
 //import { StatusBar } from 'expo-status-bar';
-import {StyleSheet, Text, View, TextInput, Button, ImageBackground} from 'react-native';
+import {StyleSheet, Text, View, TextInput, Button, ImageBackground, FlatList, Modal, Pressable, Alert} from 'react-native';
 import React, {useState} from "react";
 
 export default function App() {
@@ -18,36 +18,82 @@ export default function App() {
   const image = {uri: "https://i.stack.imgur.com/jGlzr.png"};
   const [text, onChangeText] = useState("");
   const [goalList, setGoalList] = useState(sampleGoals);
+  const [modalVisible, setModalVisible] = useState(false);
+
+
 
   const onPressAdd = () => {
+    //console.log("test")
     setGoalList([...goalList, {key: goalList.length+1, value:text}])
+    setModalVisible(!modalVisible)
+    //console.log(goalList)
   };
 
   const onPressDelete = (key) => {
-    return setGoalList(goalList.filter(item => item.key !== key))
+    //console.log(key.id)
+    return setGoalList(goalList.filter(item => item.key !== key.id))
   }
 
-  const buttonAdd = () => {
+  const inputAdd = () => {
     return (
-        <Button
-            title="Ajouter"
-            onPress={onPressAdd}
+        <TextInput
+            style={styles.input}
+            onChangeText={onChangeText}
+            value={text}
+            placeholder='Entrer ici'
         />
     )
   }
 
-  const arrayMap = () => {
-      return (
-          goalList.map(({key, value}) => (
-              <View style={styles.Array}>
-                  <Text key={key} style={styles.text}>
-                      {value}
-                  </Text>
-                  {buttonDelete(key)}
-              </View>
-          ))
-      )
+  const buttonAdd = () =>{
+    return (
+        <Button
+            title="Valider"
+            onPress={onPressAdd}
+        />
+    )
   }
+  const modal = () => {
+    return (
+        <View style={styles.centeredView}>
+          <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                Alert.alert("Modal has been closed.");
+                setModalVisible(!modalVisible);
+              }}
+
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <View style={styles.Array}>
+                  {inputAdd()}
+                  {buttonAdd()}
+                </View>
+              </View>
+            </View>
+          </Modal>
+          <Pressable
+              style={[styles.button, styles.buttonOpen]}
+              onPress={() => setModalVisible(true)}
+          >
+            <Text style={styles.textStyle}>Ajouter</Text>
+          </Pressable>
+        </View>
+    );
+  }
+  const Item = ({ title, id }) => (
+      <View style={styles.item}>
+        <Text style={styles.title}>{title}</Text>
+        {buttonDelete({id})}
+      </View>
+  );
+
+  const renderItem = ({ item }) => (
+      <Item title={item.value} id={item.key}/>
+  );
 
   const buttonDelete = (key) => {
     return(
@@ -62,15 +108,13 @@ export default function App() {
     return (
         <View  style={styles.container}>
           <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-              {arrayMap()}
+            <FlatList
+                data={goalList}
+                renderItem={renderItem}
+                keyExtractor={item => item.key}
+            />
             <View style={styles.containerInput}>
-              <TextInput
-                  style={styles.input}
-                  onChangeText={onChangeText}
-                  value={text}
-                  placeholder='Entrer ici'
-              />
-              {buttonAdd()}
+              {modal()}
             </View>
           </ImageBackground>
         </View>
@@ -94,7 +138,6 @@ const styles = StyleSheet.create({
 
   Array: {
     flexDirection: "row",
-    alignItems: "flex-start",
   },
 
   text: {
@@ -111,12 +154,60 @@ const styles = StyleSheet.create({
   input: {
     borderColor: '#156988',
     height: 40,
-    margin: 12,
     borderWidth: 1,
     padding: 10,
   },
 
-  button: {
-    alignSelf: "flex-end",
+  item: {
+    backgroundColor: '#156988',
+    padding: 20,
+    marginTop: 30,
+    justifyContent: "space-between",
+    marginVertical: 1,
+    marginHorizontal: 16,
+    flexDirection: "row",
   },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    padding: 10,
+    elevation: 2,
+    marginBottom: 5,
+    marginTop: 5,
+  },
+  buttonOpen: {
+    backgroundColor: "#156988",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
 });
